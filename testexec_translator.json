@@ -1,0 +1,31 @@
+{
+    "testexec_key" : "testExecutionKey",
+    "project" : "info/project",
+    "summary" : "info/summary",
+    "description" :"info/description",
+    "user" : "info/user",
+    "version" : "info/version",
+    "revision" : "info/revision",
+    "startDate" : "info/startDate",
+    "finishDate" : "info/finishDate",
+    
+    "tests" : "tests",
+
+    "test_comment" : "comment",
+    "test_status" : "status",
+    "test_finish" : "finish",
+    "test_start" : "start",
+    "test_testKey" : "testKey",
+    "test_executedBy": "executedBy",
+    "test_evidences" : "evidences",
+
+    "evidence_data" : "data",
+    "evidence_filename" : "filename",
+    "evidence_contentType" : "contentType",
+
+    "steps" : "steps",
+    
+    "step_status" : "status",
+    "step_comment" : "comment",
+    "step_evidences" : "evidences"  
+}

@@ -1,0 +1,8 @@
+argparse
+requests
+lxml
+datetime
+tlslite
+oauth2
+configparser
+pyinstaller
