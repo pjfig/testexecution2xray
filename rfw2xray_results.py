@@ -578,6 +578,7 @@ def send_request(test_exec, new_test_exec, cert, oauth_client, debug_mode):
         #   If this exists it mean that we have to create a Test Execution first
         if new_test_exec:
             url_create = urljoin(jira_address,'/rest/api/2/issue')
+            print "Url to create : " + url_create
             json_new_test_exec = json.dumps(new_test_exec)
             if debug_mode:
                 print json_new_test_exec
