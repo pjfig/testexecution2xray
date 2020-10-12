@@ -783,7 +783,7 @@ if __name__ == '__main__':
     args.components = []
  
     if debug_mode:
-        print "Arguments: " + test_exec_info_values
+        print "Arguments: " + str(test_exec_info_values)
     # start_time = time.time()
 
     if filter_test_suite or filter_test_case or filter_tag:
