@@ -50,7 +50,7 @@ NO_STEPS_HELP = 'Ignore test step status when importing result'
 
 ENDPOINT = '-e'
 ENDPOINT_EXTENDED = '--endpoint'
-ENDPOINT_DEFAULT = '/rest/raven/1.0/import/execution'
+ENDPOINT_DEFAULT = 'rest/raven/1.0/import/execution'
 ENDPOINT_HELP = 'XRAY\'s API endpoint to import test executions.\n' \
                 'Default value is /rest/raven/1.0/import/execution'
 

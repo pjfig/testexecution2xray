@@ -688,8 +688,8 @@ if __name__ == '__main__':
     parser.add_argument(constants.CERTIFICATE, constants.CERTIFICATE_EXTENDED,
                         help=constants.CERTIFICATE_HELP)
 
-    parser.add_argument(constants.COMPONENTS, constants.COMPONENTS_EXTENDED, nargs='+',
-                        help=constants.COMPONENTS_HELP)
+    #parser.add_argument(constants.COMPONENTS, constants.COMPONENTS_EXTENDED, nargs='+',
+    #                    help=constants.COMPONENTS_HELP)
 
     # steps_filter == false ? do not import steps : import steps
     # evidences => NONE || FAIL || ALL
@@ -777,8 +777,9 @@ if __name__ == '__main__':
             split(constants.TEST_EXECUTION_INFO_TESTENVIRONMENTS_SEPERATOR)
 
     #   Just make sure that if no components are inserted, the components list is empty
-    if args.components is None:
-        args.components = []
+    #if args.components is None:
+    #    args.components = []
+    args.components = []
 
     # start_time = time.time()
 
