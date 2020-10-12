@@ -549,9 +549,9 @@ def no_filtering_import(xml_file, test_steps_filter, evidences_import, debug_mod
                 for ancestor in element.xpath(constants.XPATH_ANCESTOR_SUITE):
                     name = ancestor.attrib[constants.ATTRIB_NAME]
                     break
-
-        
-                teb.path_new(test_exec,constants.SUMMARY, name + ' ' + str(time.time()))
+                
+                if teb.path_get(test_exec, constants.SUMMARY) is None:
+                    teb.path_new(test_exec,constants.SUMMARY, name + ' ' + str(time.time()))
 
                 #test_exec_info.summary = test_exec_info.summary.format(name + ' ' + str(time.time()))
                 #test_exec.info = test_exec_info
@@ -577,14 +577,15 @@ def send_request(test_exec, new_test_exec, cert, oauth_client, debug_mode):
     try:
         #   If this exists it mean that we have to create a Test Execution first
         if new_test_exec:
+            url_create = urljoin(jira_address,'/rest/api/2/issue')
             json_new_test_exec = json.dumps(new_test_exec)
             if debug_mode:
                 print json_new_test_exec
             if oauth_client is None:
                 #   Create a new issue
-                response = requests.post(urljoin(jira_address,'rest/api/2/issue'), headers=headers, data = json_new_test_exec, auth=(username,password),verify = cert)
+                response = requests.post(url_create, headers=headers, data = json_new_test_exec, auth=(username,password),verify = cert)
             else:
-                response, content = oauth_client.request(urljoin(jira_address, 'rest/api/2/issue'), method="POST", headers=headers, body = json_new_test_exec)
+                response, content = oauth_client.request(url_create, method="POST", headers=headers, body = json_new_test_exec)
                 if response['status'] != '200':
                     raise Exception(constants.OAUTH_EXCEPTION_MSG.format(response['status'], content))
             if debug_mode:
@@ -594,9 +595,9 @@ def send_request(test_exec, new_test_exec, cert, oauth_client, debug_mode):
                     print response.text
 
             response.raise_for_status()
-            #   Get Key from the created Issu and add it to the Test Execution JSON in order to update the empty issue recently created
+            #   Get Key from the created Issue and add it to the Test Execution JSON in order to update the empty issue recently created
             teb.path_set(test_exec, constants.TESTEXECUTIONKEY, response.json().get('key'))
-        
+
         json_test_exec = json.dumps(test_exec)
         if debug_mode:
             with open('dump.json', 'w') as f:
@@ -780,7 +781,9 @@ if __name__ == '__main__':
     #if args.components is None:
     #    args.components = []
     args.components = []
-
+ 
+    if debug_mode:
+        print "Arguments: " + test_exec_info_values
     # start_time = time.time()
 
     if filter_test_suite or filter_test_case or filter_tag:
@@ -807,25 +810,25 @@ if __name__ == '__main__':
     for key, test_exec in test_execs.items():
         new_test_exec = {}
         #   Check if script was initialized with components, if that is the case then create an Empty Test Execution.
-        if args.components:
-            #   Get project key
-            project_key = teb.path_get(test_exec,constants.PROJECT)
+        #if args.components:
+        #   Get project key
+        project_key = teb.path_get(test_exec,constants.PROJECT)
 
-            #   Project key migh not be referenced in Test Exec JSON, then go get from the first test Key.
-            project_key = teb.path_get(teb.path_get(test_exec, constants.TESTS)[0],constants.TEST_TESTKEY).split('-')[0]
+        #   Project key migh not be referenced in Test Exec JSON, then go get from the first test Key.
+        project_key = teb.path_get(teb.path_get(test_exec, constants.TESTS)[0],constants.TEST_TESTKEY).split('-')[0]
 
-            new_test_exec = {
-                "fields": {
-                    "project": {
-                        "key": project_key
-                    },
-                    "summary": teb.path_get(test_exec,constants.SUMMARY),
-                    "issuetype":{
-                        "name": "Test Execution"
-                    },
-                    "components": [{"name": component_name } for component_name in args.components ]
-                }
+        new_test_exec = {
+            "fields": {
+                "project": {
+                    "key": project_key
+                },
+                "summary": teb.path_get(test_exec,constants.SUMMARY),
+                "issuetype":{
+                    "name": "Test Execution"
+                },
+                "components": [{"name": component_name } for component_name in args.components ]
             }
+        }
 
         response = send_request(test_exec, new_test_exec, certificate, oauth_client, debug_mode)
         if response:
