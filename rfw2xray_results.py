@@ -482,16 +482,11 @@ def filtering_import(xml_file, test_steps_filter, evidences_import, import_filte
                 else:
 
 
-                    #test_exec_info = TestExecInfo(**kwargs)
-
-                    teb.path_new(test_exec,constants.SUMMARY, name + ':'.join(filter_key_value) + '-' +
-                                                                           str(time.time()))
                     for key in kwargs:
                         teb.path_new(test_exec, key, kwargs[key])
 
-
-                    #test_exec_info.summary = test_exec_info.summary.format(name, ':'.join(filter_key_value) + '-' +
-                    #                                                       str(time.time()))
+                    if teb.path_get(test_exec, constants.SUMMARY) is None :
+                        teb.path_new(test_exec,constants.SUMMARY, constants.TEST_EXECUTION_SUMMARY_FILTERS.format(name + ' ' + str(time.time())))
                    
                     #test_exec.info = test_exec_info
 
@@ -550,8 +545,8 @@ def no_filtering_import(xml_file, test_steps_filter, evidences_import, debug_mod
                     name = ancestor.attrib[constants.ATTRIB_NAME]
                     break
                 
-                if teb.path_get(test_exec, constants.SUMMARY) is None:
-                    teb.path_new(test_exec,constants.SUMMARY, name + ' ' + str(time.time()))
+                if teb.path_get(test_exec, constants.SUMMARY) is None :
+                    teb.path_new(test_exec,constants.SUMMARY, constants.TEST_EXECUTION_SUMMARY.format(name + ' ' + str(time.time())))
 
                 #test_exec_info.summary = test_exec_info.summary.format(name + ' ' + str(time.time()))
                 #test_exec.info = test_exec_info
@@ -796,16 +791,9 @@ if __name__ == '__main__':
     # start_time = time.time()
 
     if filter_test_suite or filter_test_case or filter_tag:
-        if constants.TEST_EXECUTION_INFO_SUMMARY_KEY not in test_exec_info_values:
-            test_exec_info_values[constants.TEST_EXECUTION_INFO_SUMMARY_KEY] = constants.TEST_EXECUTION_SUMMARY_FILTERS
-
         test_execs = filtering_import(file, test_steps_filter,
                                       evidences_import, import_filters, filter_option,  debug_mode, **test_exec_info_values)
     else:
-
-        if constants.TEST_EXECUTION_INFO_SUMMARY_KEY not in test_exec_info_values:
-            test_exec_info_values[constants.TEST_EXECUTION_INFO_SUMMARY_KEY] = constants.TEST_EXECUTION_SUMMARY
-
         test_execs = no_filtering_import(file, test_steps_filter, evidences_import,  debug_mode, **test_exec_info_values)
 
     # print time.time() - start_time
