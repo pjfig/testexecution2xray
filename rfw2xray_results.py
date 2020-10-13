@@ -600,7 +600,7 @@ def send_request(test_exec, new_test_exec, cert, oauth_client, debug_mode):
         #   Try basic auth if no OAuth client
         if oauth_client is None:
             
-            #response = requests.post(url, headers=headers, data=json_test_exec, auth=(username, password), verify = cert)
+            response = requests.post(url, headers=headers, data=json_test_exec, auth=(username, password), verify = cert)
             if debug_mode:
                 print response.text
                 print response
