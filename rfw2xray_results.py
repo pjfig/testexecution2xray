@@ -577,43 +577,35 @@ def send_request(test_exec, new_test_exec, cert, oauth_client, debug_mode):
             if debug_mode:
                 print json_new_test_exec
             if oauth_client is None:
-                pass
                 #   Create a new issue
-                #response = requests.post(url_create, headers=headers, data = json_new_test_exec, auth=(username,password),verify = cert)
+                response = requests.post(url_create, headers=headers, data = json_new_test_exec, auth=(username,password),verify = cert)
             else:
                 response, content = oauth_client.request(url_create, method="POST", headers=headers, body = json_new_test_exec)
                 if response['status'] != '200':
                     raise Exception(constants.OAUTH_EXCEPTION_MSG.format(response['status'], content))
             if debug_mode:
-                '''
                 print response
                 resp_test = getattr(response,'text')
                 if resp_test:
                     print response.text
-                '''
-                pass
-
-            #response.raise_for_status()
+                
+            response.raise_for_status()
             #   Get Key from the created Issue and add it to the Test Execution JSON in order to update the empty issue recently created
-            #teb.path_set(test_exec, constants.TESTEXECUTIONKEY, response.json().get('key'))
-            teb.path_set(test_exec, constants.TESTEXECUTIONKEY, 'OSIS-1111')
-            
-            
+            teb.path_set(test_exec, constants.TESTEXECUTIONKEY, response.json().get('key'))
+                        
         json_test_exec = json.dumps(test_exec)
         if debug_mode:
             with open('dump.json', 'w') as f:
                 json.dump(test_exec,f)
         #   Try basic auth if no OAuth client
         if oauth_client is None:
-            '''
+            
             #response = requests.post(url, headers=headers, data=json_test_exec, auth=(username, password), verify = cert)
             if debug_mode:
                 print response.text
                 print response
             response.raise_for_status()
             return response.text
-            '''
-            pass
         else:
             resp, content = oauth_client.request(url, method="POST", body = json_test_exec, headers = headers)
             if resp['status'] != '200':
