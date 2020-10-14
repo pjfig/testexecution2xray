@@ -279,6 +279,7 @@ VERSION = 'version'
 REVISION = 'revision'
 STARTDATE = 'startDate'
 FINISHDATE = 'finishDate'
+TESTPLANKEY = 'testPlanKey'
 
 TESTS = 'tests'
 

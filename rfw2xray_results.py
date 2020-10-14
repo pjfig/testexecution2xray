@@ -569,10 +569,13 @@ def send_request(test_exec, new_test_exec, cert, oauth_client, debug_mode):
     """
     headers = {constants.CONTENT_TYPE: constants.CONTENT_TYPE_JSON}
     url = urljoin(jira_address, endpoint)
+    url_create = urljoin(jira_address,'rest/api/2/issue')
+    url_testexec_testplan = urljoin(jira_address,'rest/raven/1.0/api/testplan/{}/testexecution'.format(teb.path_get(test_exec,constants.TESTPLANKEY)))
+    output = None 
+    created_test_exec = None
     try:
         #   If this exists it mean that we have to create a Test Execution first
         if new_test_exec:
-            url_create = urljoin(jira_address,'rest/api/2/issue')
             json_new_test_exec = json.dumps(new_test_exec)
             if debug_mode:
                 print json_new_test_exec
@@ -591,8 +594,11 @@ def send_request(test_exec, new_test_exec, cert, oauth_client, debug_mode):
                 
             response.raise_for_status()
             #   Get Key from the created Issue and add it to the Test Execution JSON in order to update the empty issue recently created
-            teb.path_set(test_exec, constants.TESTEXECUTIONKEY, response.json().get('key'))
-                        
+            created_test_exec = response.json().get('key')
+            teb.path_set(test_exec, constants.TESTEXECUTIONKEY, created_test_exec)
+
+
+
         json_test_exec = json.dumps(test_exec)
         if debug_mode:
             with open('dump.json', 'w') as f:
@@ -605,12 +611,31 @@ def send_request(test_exec, new_test_exec, cert, oauth_client, debug_mode):
                 print response.text
                 print response
             response.raise_for_status()
-            return response.text
+            output = response.text
+
+            if teb.path_get(test_exec,constants.TESTPLANKEY):
+                test_plan_data = {"add" : [created_test_exec]}        
+                response = requests.post(url_testexec_testplan, headers=headers, data=json.dumps(test_plan_data), auth=(username, password), verify = cert)
+                if debug_mode:
+                    print "Test plan response:"
+                    print response.text
+                    print response
+                response.raise_for_status      
         else:
             resp, content = oauth_client.request(url, method="POST", body = json_test_exec, headers = headers)
             if resp['status'] != '200':
                 raise Exception(constants.OAUTH_EXCEPTION_MSG.format(resp['status'], content))
-            return content
+            #return content
+            output = content
+
+            if teb.path_get(test_exec,constants.TESTPLANKEY):
+                test_plan_data = {"add" : [created_test_exec]}        
+                resp, content = oauth_client.request(url_testexec_testplan, method="POST", body = json_test_exec, headers = headers)
+                
+                if resp['status'] != '200':
+                    raise Exception(constants.OAUTH_EXCEPTION_MSG.format(resp['status'], content))
+    
+        return output
 
     except Exception as e:
         print 'exception: '
