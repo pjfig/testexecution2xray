@@ -50,7 +50,7 @@ NO_STEPS_HELP = 'Ignore test step status when importing result'
 
 ENDPOINT = '-e'
 ENDPOINT_EXTENDED = '--endpoint'
-ENDPOINT_DEFAULT = '/rest/raven/1.0/import/execution'
+ENDPOINT_DEFAULT = 'rest/raven/1.0/import/execution'
 ENDPOINT_HELP = 'XRAY\'s API endpoint to import test executions.\n' \
                 'Default value is /rest/raven/1.0/import/execution'
 
@@ -159,6 +159,10 @@ CERTIFICATE_EXTENDED = '--certificate'
 CERTIFICATE_HELP = 'Set path to SSL certificate. If value not set, there will not be any verification of certificates. '\
                    'Exposing this application to security risks.\n'\
                    'Example: -c "/PATH/TO/CERTIFICATE"'
+
+COMPONENTS = '-co'
+COMPONENTS_EXTENDED = '--components'
+COMPONENTS_HELP = 'Jira components to add to test exec'
 
 # TEST EXECUTION INFO KEYS
 TEST_EXECUTION_INFO_SUMMARY_KEY = 'summary'
@@ -275,6 +279,7 @@ VERSION = 'version'
 REVISION = 'revision'
 STARTDATE = 'startDate'
 FINISHDATE = 'finishDate'
+TESTPLANKEY = 'testPlanKey'
 
 TESTS = 'tests'
 

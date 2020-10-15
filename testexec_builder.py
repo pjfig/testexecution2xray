@@ -11,7 +11,9 @@ translator = {
     "revision" : "info/revision",
     "startDate" : "info/startDate",
     "finishDate" : "info/finishDate",
-    "testPlanKey" : "info/testPlayKey",
+    "testPlanKey" : "info/testPlanKey",
+    "testEnvironments" : "info/testEnvironment",
+
     "tests" : "tests",
 
     "test_comment" : "comment",

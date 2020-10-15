@@ -8,6 +8,7 @@
     "revision" : "info/revision",
     "startDate" : "info/startDate",
     "finishDate" : "info/finishDate",
+    "testEnvironments" : "info/testEnvironment",
     
     "tests" : "tests",
 
