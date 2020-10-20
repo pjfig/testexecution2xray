@@ -12,7 +12,7 @@ translator = {
     "startDate" : "info/startDate",
     "finishDate" : "info/finishDate",
     "testPlanKey" : "info/testPlanKey",
-    "testEnvironments" : "info/testEnvironment",
+    "testEnvironments" : "info/testEnvironments",
 
     "tests" : "tests",
 
