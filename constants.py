@@ -118,6 +118,11 @@ TEST_EXEC_DESCRIPTION_EXTENDED = '--description'
 TEST_EXEC_DESCRIPTION_HELP = 'Set a description if test execution is created.\n' \
                              'Example: -d \"This is a description for a test execution\"'
 
+TEST_EXEC_LABEL = '-l'
+TEST_EXEC_LABEL_EXTENDED = '--labels'
+TEST_EXEC_LABEL_HELP = 'Set label(s) on test execution. Is possible to set multiple tables by separating them with \"|\".\n' \
+                        'Example: -l "Label1|Label2"'
+
 TEST_EXEC_VERSION = '-v'
 TEST_EXEC_VERSION_EXTENDED = '--test-exec-version'
 TEST_EXEC_VERSION_HELP = 'Set a version in the test execution issue if a test execution is created.'

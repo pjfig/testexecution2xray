@@ -686,6 +686,9 @@ if __name__ == '__main__':
     parser.add_argument(constants.TEST_EXEC_DESCRIPTION,constants.TEST_EXEC_DESCRIPTION_EXTENDED,
                         help=constants.TEST_EXEC_DESCRIPTION_HELP)
 
+    parser.add_argument(constants.TEST_EXEC_LABEL, constants.TEST_EXEC_LABEL_EXTENDED,
+                        help=constants.TEST_EXEC_LABEL_HELP)
+
     parser.add_argument(constants.TEST_EXEC_VERSION, constants.TEST_EXEC_VERSION_EXTENDED,
                         help=constants.TEST_EXEC_VERSION_HELP)
 
@@ -823,8 +826,6 @@ if __name__ == '__main__':
 
     for key, test_exec in test_execs.items():
         new_test_exec = {}
-        #   Check if script was initialized with components, if that is the case then create an Empty Test Execution.
-        #if args.components:
         #   Get project key
         project_key = teb.path_get(test_exec,constants.PROJECT)
 
@@ -840,7 +841,8 @@ if __name__ == '__main__':
                 "issuetype":{
                     "name": "Test Execution"
                 },
-                "components": [{"name": component_name } for component_name in args.components ]
+                "components": [{"name": component_name } for component_name in args.components ],
+                "labels": [] if not args.labels else args.labels.split('|')
             }
         }
 
