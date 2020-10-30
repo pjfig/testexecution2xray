@@ -713,8 +713,8 @@ if __name__ == '__main__':
     parser.add_argument(constants.CERTIFICATE, constants.CERTIFICATE_EXTENDED,
                         help=constants.CERTIFICATE_HELP)
 
-    #parser.add_argument(constants.COMPONENTS, constants.COMPONENTS_EXTENDED, nargs='+',
-    #                    help=constants.COMPONENTS_HELP)
+    parser.add_argument(constants.COMPONENTS, constants.COMPONENTS_EXTENDED, nargs='+',
+                        help=constants.COMPONENTS_HELP)
 
     # steps_filter == false ? do not import steps : import steps
     # evidences => NONE || FAIL || ALL
@@ -800,11 +800,6 @@ if __name__ == '__main__':
     if args.test_environments:
         test_exec_info_values[constants.TEST_EXECUTION_INFO_TESTENVIRONMENTS_KEY] = args.test_environments.\
             split(constants.TEST_EXECUTION_INFO_TESTENVIRONMENTS_SEPERATOR)
-
-    #   Just make sure that if no components are inserted, the components list is empty
-    #if args.components is None:
-    #    args.components = []
-    args.components = []
  
     if debug_mode:
         print "Arguments: " + str(test_exec_info_values)
@@ -816,35 +811,31 @@ if __name__ == '__main__':
     else:
         test_execs = no_filtering_import(file, test_steps_filter, evidences_import,  debug_mode, **test_exec_info_values)
 
-    # print time.time() - start_time
-
     # if no password create a OAuth client
-
     oauth_client = None 
     if not password:
         oauth_client = rfw2xray_auth.create_oauth_client(os.path.join(os.path.dirname(os.path.abspath(__file__)), constants.OAUTH_CONFIG_FILE))
 
     for key, test_exec in test_execs.items():
         new_test_exec = {}
-        #   Get project key
-        project_key = teb.path_get(test_exec,constants.PROJECT)
-
-        #   Project key migh not be referenced in Test Exec JSON, then go get from the first test Key.
-        project_key = teb.path_get(teb.path_get(test_exec, constants.TESTS)[0],constants.TEST_TESTKEY).split('-')[0]
-
-        new_test_exec = {
-            "fields": {
-                "project": {
-                    "key": project_key
-                },
-                "summary": teb.path_get(test_exec,constants.SUMMARY),
-                "issuetype":{
-                    "name": "Test Execution"
-                },
-                "components": [{"name": component_name } for component_name in args.components ],
-                "labels": [] if not args.labels else args.labels.split('|')
+       
+        # If key from test_exec is NO_TESTEXEC_KEY means that we have to create a test execution, which means that we need to
+        # set the new test execution Jira fields  
+        if key == constants.NO_TESTEXEC_KEY:
+            project_key = teb.path_get(teb.path_get(test_exec, constants.TESTS)[0],constants.TEST_TESTKEY).split('-')[0]
+            new_test_exec = {
+                "fields": {
+                    "project": {
+                        "key": project_key
+                    },
+                    "summary": teb.path_get(test_exec,constants.SUMMARY),
+                    "issuetype":{
+                        "name": "Test Execution"
+                    },
+                    "components": [] if not args.components else [{"name": component_name } for component_name in args.components ],
+                    "labels": [] if not args.labels else args.labels.split('|')
+                }
             }
-        }
 
         response = send_request(test_exec, new_test_exec, certificate, oauth_client, debug_mode)
         if response:
