@@ -776,8 +776,8 @@ if __name__ == '__main__':
     if args.summary:
         test_exec_info_values[constants.TEST_EXECUTION_INFO_SUMMARY_KEY] = args.summary
 
-    #if args.description:
-    #    test_exec_info_values[constants.TEST_EXECUTION_INFO_DESCRIPTION_KEY] = args.description
+    if args.description:
+        test_exec_info_values[constants.TEST_EXECUTION_INFO_DESCRIPTION_KEY] = args.description
 
     if args.test_exec_version:
         test_exec_info_values[constants.TEST_EXECUTION_INFO_VERSION_KEY] = args.test_exec_version
@@ -833,7 +833,6 @@ if __name__ == '__main__':
                         "name": "Test Execution"
                     },
                     "components": [] if not args.components else [{"name": component_name } for component_name in args.components ],
-                    "description": args.description,
                     "labels": [] if not args.labels else args.labels.split('|')
                 }
             }
